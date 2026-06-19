@@ -71,6 +71,9 @@ const formattedDate = date.toLocaleDateString('en-AU', { day: 'numeric', month: 
   padding: 2rem;
   display: flex; flex-direction: column; gap: 1rem; justify-content: center;
 }
+.featured-body:only-child {
+  grid-column: 1 / -1;
+}
 .featured-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 .featured-label {
   background: var(--accent);

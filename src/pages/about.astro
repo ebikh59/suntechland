@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+---
+
+<BaseLayout title="About SunTechLand" description="Learn about SunTechLand — your trusted source for cybersecurity news and threat intelligence.">
+  <div class="container about-page">
+    <div class="about-hero">
+      <h1>About <span>SunTechLand</span></h1>
+      <p class="lead">Your trusted source for cybersecurity intelligence, threat research, and security news — updated around the clock.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-content">
+        <h2>Our Mission</h2>
+        <p>SunTechLand exists to make professional-grade cybersecurity intelligence accessible to everyone — from enterprise security teams to developers and students learning to protect their systems.</p>
+        <p>We aggregate and curate content from trusted security research firms, government advisories (CISA, NIST), and community sources to deliver timely, accurate, and actionable information.</p>
+
+        <h2>What We Cover</h2>
+        <ul>
+          <li><strong>Threat Intelligence</strong> — Nation-state actors, APT groups, emerging attack vectors</li>
+          <li><strong>Vulnerabilities & CVEs</strong> — Daily CVE alerts with severity ratings and patch guidance</li>
+          <li><strong>Data Breaches</strong> — Breaking breach news with impact analysis</li>
+          <li><strong>Security News</strong> — Industry news, policy updates, and regulatory changes</li>
+          <li><strong>Tutorials</strong> — Practical guides for hardening systems, pen testing, and security tools</li>
+          <li><strong>Tools & Reviews</strong> — Honest reviews of security software, platforms, and hardware</li>
+        </ul>
+
+        <h2>How Content Is Published</h2>
+        <p>Our automated pipeline aggregates content from reputable security sources 24/7. Every article is reviewed for accuracy before publication. We cite original sources and never misrepresent research.</p>
+
+        <h2>Contact</h2>
+        <p>For tips, corrections, partnerships, or advertising inquiries, visit our <a href="/contact">contact page</a>.</p>
+      </div>
+
+      <aside class="about-sidebar">
+        <div class="stat-card">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Content updates</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">6+</div>
+          <div class="stat-label">Security categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free to read</div>
+        </div>
+        <div class="trust-box">
+          <h3>Trusted Sources</h3>
+          <ul>
+            <li>CISA advisories</li>
+            <li>NIST NVD</li>
+            <li>MITRE ATT&CK</li>
+            <li>Krebs on Security</li>
+            <li>Threat Post</li>
+            <li>Bleeping Computer</li>
+            <li>SANS Internet Storm Center</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <NewsletterSignup />
+  </div>
+</BaseLayout>
+
+<style>
+.about-page { padding: 3rem 0; }
+.about-hero { text-align: center; margin-bottom: 3rem; }
+.about-hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; }
+.about-hero h1 span { color: var(--accent); }
+.lead { font-size: 1.15rem; color: var(--subtle); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-content h2 { font-size: 1.4rem; font-weight: 700; color: var(--accent); margin: 2rem 0 0.75rem; }
+.about-content p { color: var(--subtle); line-height: 1.8; margin-bottom: 1rem; }
+.about-content a { color: var(--accent); }
+.about-content ul { padding-left: 1.25rem; color: var(--subtle); line-height: 2; }
+.about-content li strong { color: var(--text); }
+
+.about-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.stat-number { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+.stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+.trust-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+.trust-box h3 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+.trust-box ul { list-style: none; }
+.trust-box li { font-size: 0.88rem; color: var(--subtle); padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+.trust-box li:last-child { border-bottom: none; }
+</style>

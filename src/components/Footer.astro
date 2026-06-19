@@ -1,0 +1,103 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">SunTech<span>Land</span></a>
+      <p>Your trusted source for cybersecurity news, threat intelligence, and security research.</p>
+      <div class="socials">
+        <a href="#" aria-label="Twitter/X">𝕏</a>
+        <a href="#" aria-label="LinkedIn">in</a>
+        <a href="#" aria-label="RSS Feed">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="3" cy="13" r="2"/>
+            <path d="M1 5v2a8 8 0 0 1 8 8h2A10 10 0 0 0 1 5z"/>
+            <path d="M1 1v2a12 12 0 0 1 12 12h2A14 14 0 0 0 1 1z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <div>
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="/category/threat-intelligence">Threat Intelligence</a></li>
+          <li><a href="/category/vulnerabilities">Vulnerabilities</a></li>
+          <li><a href="/category/security-news">Security News</a></li>
+          <li><a href="/category/data-breaches">Data Breaches</a></li>
+          <li><a href="/category/tutorials">Tutorials</a></li>
+          <li><a href="/category/tools-reviews">Tools & Reviews</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog">All Articles</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© {year} SunTechLand. All rights reserved.</p>
+      <p class="disclaimer">For educational and informational purposes only.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  margin-top: 5rem;
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  padding: 3rem 1.25rem;
+}
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+}
+.footer-brand p { color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem; max-width: 320px; }
+.footer-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+}
+.footer-logo span { color: var(--accent); }
+.socials { display: flex; gap: 1rem; margin-top: 1.25rem; }
+.socials a {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 700;
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+.socials a:hover { border-color: var(--accent); color: var(--accent); }
+.footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.footer-links h4 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.footer-links a { font-size: 0.88rem; color: var(--muted); }
+.footer-links a:hover { color: var(--text); }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem;
+}
+.footer-bottom .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+.disclaimer { font-style: italic; }
+</style>

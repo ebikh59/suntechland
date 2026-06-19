@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FeaturedCard from '../components/FeaturedCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import AdBanner from '../components/AdBanner.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('posts'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const featured = allPosts.find(p => p.data.featured) ?? allPosts[0];
+const latest = allPosts.filter(p => p.id !== featured?.id).slice(0, 6);
+
+const categories = [
+  { slug: 'threat-intelligence', label: 'Threat Intel', icon: '🎯', color: '#ef4444' },
+  { slug: 'vulnerabilities',     label: 'CVEs',         icon: '⚠️',  color: '#f97316' },
+  { slug: 'security-news',       label: 'News',         icon: '📡',  color: '#00d4ff' },
+  { slug: 'data-breaches',       label: 'Breaches',     icon: '🔓',  color: '#eab308' },
+  { slug: 'tutorials',           label: 'Tutorials',    icon: '📖',  color: '#22c55e' },
+  { slug: 'tools-reviews',       label: 'Tools',        icon: '🛡️',  color: '#a855f7' },
+];
+---
+
+<BaseLayout title="Cybersecurity News & Threat Intelligence">
+  <!-- Hero ticker -->
+  <div class="ticker-bar">
+    <div class="container ticker-inner">
+      <span class="ticker-label">LIVE</span>
+      <div class="ticker-track">
+        <span>Latest: Cybersecurity threats evolve daily — stay informed with SunTechLand &nbsp;&nbsp;•&nbsp;&nbsp; New CVE alerts published &nbsp;&nbsp;•&nbsp;&nbsp; Threat intelligence from global feeds &nbsp;&nbsp;•&nbsp;&nbsp; Updated hourly via automated feeds</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top ad -->
+  <div class="container" style="margin-top:1.5rem">
+    <AdBanner size="leaderboard" />
+  </div>
+
+  <!-- Featured post -->
+  {featured && (
+    <section class="section container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Story</h2>
+      </div>
+      <FeaturedCard
+        title={featured.data.title}
+        excerpt={featured.data.excerpt}
+        date={featured.data.date}
+        category={featured.data.category}
+        slug={featured.id}
+        image={featured.data.image}
+        author={featured.data.author}
+      />
+    </section>
+  )}
+
+  <!-- Category quick-nav -->
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Browse by Category</h2>
+    </div>
+    <div class="categories-grid">
+      {categories.map(cat => (
+        <a href={`/category/${cat.slug}`} class="cat-card" style={`--cc: ${cat.color}`}>
+          <span class="cat-icon">{cat.icon}</span>
+          <span class="cat-label">{cat.label}</span>
+          <span class="cat-arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Latest articles -->
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Latest Articles</h2>
+      <a href="/blog" class="see-all">View all →</a>
+    </div>
+    <div class="grid-3">
+      {latest.map(post => (
+        <ArticleCard
+          title={post.data.title}
+          excerpt={post.data.excerpt}
+          date={post.data.date}
+          category={post.data.category}
+          slug={post.id}
+          image={post.data.image}
+          author={post.data.author}
+        />
+      ))}
+    </div>
+  </section>
+
+  <div class="container">
+    <NewsletterSignup />
+  </div>
+
+  <!-- Bottom ad -->
+  <div class="container" style="margin-bottom:2rem">
+    <AdBanner size="leaderboard" id="ad-bottom" />
+  </div>
+</BaseLayout>
+
+<style>
+/* Ticker */
+.ticker-bar {
+  background: #0d1117;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 0;
+  overflow: hidden;
+}
+.ticker-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+}
+.ticker-label {
+  background: var(--red, #ef4444);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  animation: blink 1.2s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.ticker-track {
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+}
+.ticker-track span {
+  display: inline-block;
+  font-size: 0.82rem;
+  color: var(--subtle);
+  animation: scroll 30s linear infinite;
+}
+@keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+/* Sections */
+.section { margin-top: 3rem; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.section-title { font-size: 1.2rem; font-weight: 800; position: relative; padding-left: 1rem; }
+.section-title::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); border-radius: 2px;
+}
+.see-all { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
+.see-all:hover { color: var(--text); }
+
+/* Category cards */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+@media (max-width: 1100px) { .categories-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px)  { .categories-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.cat-card:hover {
+  border-color: var(--cc);
+  transform: translateY(-2px);
+}
+.cat-icon { font-size: 1.5rem; }
+.cat-label { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+.cat-arrow { font-size: 0.8rem; color: var(--cc); }
+</style>

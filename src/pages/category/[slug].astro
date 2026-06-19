@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
+import AdBanner from '../../components/AdBanner.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  const categories = [...new Set(allPosts.map(p => p.data.category))];
+  return categories.map(cat => ({
+    params: { slug: cat },
+    props: {
+      posts: allPosts
+        .filter(p => p.data.category === cat)
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+const { slug } = Astro.params;
+const { posts } = Astro.props;
+
+const labelMap: Record<string, string> = {
+  'threat-intelligence': 'Threat Intelligence',
+  'vulnerabilities':     'Vulnerabilities & CVEs',
+  'security-news':       'Security News',
+  'tutorials':           'Tutorials & Guides',
+  'tools-reviews':       'Tools & Reviews',
+  'data-breaches':       'Data Breaches',
+};
+const label = labelMap[slug] ?? slug;
+---
+
+<BaseLayout title={label} description={`Latest ${label} articles on SunTechLand.`}>
+  <div class="container cat-page">
+    <div class="page-header">
+      <a href="/blog" class="back-link">← All Articles</a>
+      <div class="cat-title-row">
+        <h1>{label}</h1>
+        <CategoryBadge category={slug} />
+      </div>
+      <p>{posts.length} article{posts.length !== 1 ? 's' : ''} in this category</p>
+    </div>
+
+    <AdBanner size="leaderboard" />
+
+    {posts.length === 0 ? (
+      <div class="empty-state">
+        <p>No articles in this category yet. Check back soon.</p>
+      </div>
+    ) : (
+      <div class="grid-3" style="margin-top:2rem">
+        {posts.map(post => (
+          <ArticleCard
+            title={post.data.title}
+            excerpt={post.data.excerpt}
+            date={post.data.date}
+            category={post.data.category}
+            slug={post.id}
+            image={post.data.image}
+            author={post.data.author}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.cat-page { padding: 2.5rem 0; }
+.back-link { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; display: inline-block; }
+.back-link:hover { color: var(--accent); }
+.cat-title-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+h1 { font-size: 2rem; font-weight: 800; }
+.page-header p { color: var(--muted); font-size: 0.9rem; }
+.empty-state { text-align: center; padding: 4rem 0; color: var(--muted); }
+</style>

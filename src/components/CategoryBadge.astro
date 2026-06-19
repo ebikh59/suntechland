@@ -1,0 +1,31 @@
+---
+const { category } = Astro.props as { category: string };
+
+const map: Record<string, { label: string; color: string }> = {
+  'threat-intelligence': { label: 'Threat Intel', color: '#ef4444' },
+  'vulnerabilities':     { label: 'Vulnerabilities', color: '#f97316' },
+  'security-news':       { label: 'Security News', color: '#00d4ff' },
+  'tutorials':           { label: 'Tutorial', color: '#22c55e' },
+  'tools-reviews':       { label: 'Tools & Reviews', color: '#a855f7' },
+  'data-breaches':       { label: 'Data Breach', color: '#eab308' },
+};
+
+const { label, color } = map[category] ?? { label: category, color: '#94a3b8' };
+---
+
+<span class="badge" style={`--c: ${color}`}>{label}</span>
+
+<style>
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+}
+</style>

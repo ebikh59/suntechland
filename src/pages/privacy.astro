@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const updated = '2025-01-01';
+---
+
+<BaseLayout title="Privacy Policy" description="SunTechLand privacy policy.">
+  <div class="container privacy-page">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: {updated}</p>
+    <div class="prose-content">
+      <p>SunTechLand ("we", "us") operates suntechland.com. This page informs you of our policies regarding the collection, use, and disclosure of personal data.</p>
+      <h2>Data We Collect</h2>
+      <p>We may collect email addresses when you subscribe to our newsletter. We also collect standard web analytics data (page views, referrers) via privacy-friendly analytics.</p>
+      <h2>Cookies</h2>
+      <p>We use cookies to serve advertisements and improve user experience. Third-party advertisers may also set cookies on your device.</p>
+      <h2>Advertising</h2>
+      <p>We participate in advertising programs. Advertisers may use cookies to serve ads based on prior visits to this and other websites.</p>
+      <h2>Your Rights</h2>
+      <p>You can opt out of personalised advertising at any time. Contact us via our <a href="/contact">contact page</a> to request data deletion.</p>
+      <h2>Contact</h2>
+      <p>Questions? Use our <a href="/contact">contact form</a>.</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.privacy-page { padding: 3rem 0; max-width: 720px; }
+h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.updated { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+.prose-content h2 { font-size: 1.2rem; font-weight: 700; color: var(--accent); margin: 2rem 0 0.5rem; }
+.prose-content p { color: var(--subtle); line-height: 1.8; margin-bottom: 1rem; }
+.prose-content a { color: var(--accent); }
+</style>

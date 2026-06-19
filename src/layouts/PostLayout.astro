@@ -1,0 +1,196 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import AdBanner from '../components/AdBanner.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  excerpt: string;
+  date: Date;
+  category: string;
+  tags: string[];
+  author: string;
+  image?: string;
+  source?: string;
+}
+
+const { title, excerpt, date, category, tags, author, image, source } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-AU', {
+  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+});
+
+const related = (await getCollection('posts', p =>
+  p.data.category === category
+)).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 3);
+---
+
+<BaseLayout title={title} description={excerpt} image={image} type="article">
+  <div class="post-page">
+    <div class="container">
+
+      <!-- Top leaderboard ad -->
+      <AdBanner size="leaderboard" />
+
+      <div class="post-layout">
+        <!-- Main content -->
+        <article class="post-article">
+          <header class="post-header">
+            <div class="post-meta">
+              <CategoryBadge category={category} />
+              <time datetime={date.toISOString()}>{formattedDate}</time>
+              {source && <a href={source} target="_blank" rel="noopener" class="source-link">Source ↗</a>}
+            </div>
+            <h1>{title}</h1>
+            <p class="post-excerpt">{excerpt}</p>
+            <div class="post-author">
+              <div class="author-avatar">{author.charAt(0).toUpperCase()}</div>
+              <div>
+                <span class="author-name">{author}</span>
+                <span class="author-role">Security Analyst</span>
+              </div>
+            </div>
+          </header>
+
+          {image && (
+            <figure class="post-hero">
+              <img src={image} alt={title} loading="eager" />
+            </figure>
+          )}
+
+          <div class="post-content prose">
+            <slot />
+          </div>
+
+          {tags.length > 0 && (
+            <div class="post-tags">
+              <span>Tags:</span>
+              {tags.map(tag => (
+                <span class="tag">#{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <NewsletterSignup />
+
+          <!-- In-article ad -->
+          <AdBanner size="rectangle" />
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="post-sidebar">
+          <AdBanner size="sidebar" id="ad-sidebar" />
+
+          {related.length > 0 && (
+            <div class="sidebar-widget">
+              <h3 class="widget-title">Related Articles</h3>
+              <ul class="related-list">
+                {related.map(p => (
+                  <li>
+                    <CategoryBadge category={p.data.category} />
+                    <a href={`/post/${p.id}`}>{p.data.title}</a>
+                    <time>{p.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}</time>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.post-page { padding: 2rem 0; }
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+@media (max-width: 1024px) {
+  .post-layout { grid-template-columns: 1fr; }
+  .post-sidebar { display: none; }
+}
+
+.post-article { min-width: 0; }
+
+.post-header { margin-bottom: 2rem; }
+.post-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.post-meta time { font-size: 0.85rem; color: var(--muted); }
+.source-link { font-size: 0.8rem; color: var(--accent); }
+h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.25; margin-bottom: 1rem; }
+.post-excerpt { font-size: 1.1rem; color: var(--subtle); line-height: 1.65; margin-bottom: 1.5rem; }
+.post-author { display: flex; align-items: center; gap: 0.75rem; }
+.author-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--accent); color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1rem; flex-shrink: 0;
+}
+.author-name { display: block; font-weight: 600; font-size: 0.9rem; }
+.author-role { display: block; font-size: 0.78rem; color: var(--muted); }
+
+.post-hero {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+.post-hero img { width: 100%; max-height: 480px; object-fit: cover; }
+
+/* Prose styles */
+.prose { color: var(--text); font-size: 1.05rem; line-height: 1.8; }
+.prose :global(h2) { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--accent); }
+.prose :global(h3) { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.6rem; }
+.prose :global(p) { margin-bottom: 1.25rem; }
+.prose :global(ul), .prose :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+.prose :global(li) { margin-bottom: 0.4rem; }
+.prose :global(code) {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  background: var(--surface);
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+.prose :global(pre) {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+.prose :global(pre code) { background: none; border: none; padding: 0; color: #e2e8f0; }
+.prose :global(blockquote) {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--subtle);
+  font-style: italic;
+}
+.prose :global(a) { color: var(--accent); text-decoration: underline; }
+.prose :global(strong) { color: var(--text); font-weight: 700; }
+.prose :global(hr) { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.prose :global(table) { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; }
+.prose :global(th), .prose :global(td) { padding: 0.6rem 1rem; border: 1px solid var(--border); font-size: 0.9rem; }
+.prose :global(th) { background: var(--surface); font-weight: 600; }
+
+.post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 2rem 0; font-size: 0.85rem; color: var(--muted); }
+.tag { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.6rem; color: var(--subtle); font-size: 0.8rem; }
+
+/* Sidebar */
+.post-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+.sidebar-widget { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+.widget-title { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+.related-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+.related-list li { display: flex; flex-direction: column; gap: 0.35rem; }
+.related-list a { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.related-list a:hover { color: var(--accent); }
+.related-list time { font-size: 0.75rem; color: var(--muted); }
+</style>

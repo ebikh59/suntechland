@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import AdBanner from '../../components/AdBanner.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('posts'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const categories = ['All', 'threat-intelligence', 'vulnerabilities', 'security-news', 'tutorials', 'tools-reviews', 'data-breaches'];
+---
+
+<BaseLayout title="Security News" description="Latest cybersecurity news, CVE alerts, threat intelligence and security research.">
+  <div class="container blog-page">
+    <div class="page-header">
+      <h1>Security News</h1>
+      <p>Latest cybersecurity news, threat intelligence, CVE alerts and research — updated hourly.</p>
+    </div>
+
+    <AdBanner size="leaderboard" />
+
+    <div class="filter-bar">
+      {categories.map(cat => (
+        <a
+          href={cat === 'All' ? '/blog' : `/category/${cat}`}
+          class={cat === 'All' ? 'filter-btn active' : 'filter-btn'}
+        >
+          {cat === 'All' ? 'All' : cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+        </a>
+      ))}
+    </div>
+
+    {allPosts.length === 0 ? (
+      <div class="empty-state">
+        <p>No articles yet. Check back soon — content is updated hourly.</p>
+      </div>
+    ) : (
+      <div class="grid-3">
+        {allPosts.map(post => (
+          <ArticleCard
+            title={post.data.title}
+            excerpt={post.data.excerpt}
+            date={post.data.date}
+            category={post.data.category}
+            slug={post.id}
+            image={post.data.image}
+            author={post.data.author}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.blog-page { padding: 2.5rem 0; }
+.page-header { margin-bottom: 2rem; }
+.page-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.page-header p { color: var(--subtle); font-size: 1rem; }
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.filter-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--subtle);
+  background: var(--card);
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+}
+.filter-btn:hover, .filter-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.empty-state {
+  text-align: center; padding: 4rem 0; color: var(--muted);
+}
+</style>

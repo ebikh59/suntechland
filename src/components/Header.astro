@@ -1,0 +1,167 @@
+---
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'News' },
+  { href: '/category/threat-intelligence', label: 'Threats' },
+  { href: '/category/vulnerabilities', label: 'CVEs' },
+  { href: '/category/tutorials', label: 'Tutorials' },
+  { href: '/category/tools-reviews', label: 'Tools' },
+  { href: '/about', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+          <polygon points="14,6 22,10 22,18 14,22 6,18 6,10" fill="none" stroke="#00d4ff" stroke-width="0.75" opacity="0.4"/>
+          <circle cx="14" cy="14" r="3" fill="#00d4ff"/>
+        </svg>
+      </span>
+      <span class="logo-text">SunTech<span class="logo-accent">Land</span></span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class={currentPath === href || (href !== '/' && currentPath.startsWith(href)) ? 'nav-link active' : 'nav-link'}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a href="/blog" class="cta-btn">Latest News</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    {navLinks.map(({ href, label }) => (
+      <a href={href} class="mobile-nav-link">{label}</a>
+    ))}
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById('menuToggle');
+  const nav = document.getElementById('mobileNav');
+  btn?.addEventListener('click', () => {
+    nav?.classList.toggle('open');
+    btn?.classList.toggle('open');
+  });
+</script>
+
+<style>
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 64px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-text {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.logo-accent { color: var(--accent); }
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+.nav-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--subtle);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.nav-link.active { color: var(--accent); }
+
+.header-actions { display: flex; align-items: center; gap: 1rem; }
+.cta-btn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #000;
+  background: var(--accent);
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.85; color: #000; }
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.menu-toggle span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.menu-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.menu-toggle.open span:nth-child(2) { opacity: 0; }
+.menu-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav-link {
+  padding: 0.65rem 0;
+  font-size: 0.95rem;
+  color: var(--subtle);
+  border-bottom: 1px solid var(--border);
+}
+.mobile-nav-link:last-child { border-bottom: none; }
+.mobile-nav-link:hover { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .main-nav { display: none; }
+  .menu-toggle { display: flex; }
+}
+@media (max-width: 480px) {
+  .cta-btn { display: none; }
+}
+</style>

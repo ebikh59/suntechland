@@ -7,8 +7,15 @@ import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('posts');
-  const categories = [...new Set(allPosts.map(p => p.data.category))];
-  return categories.map(cat => ({
+  const allCategories = [
+    'threat-intelligence',
+    'vulnerabilities',
+    'security-news',
+    'tutorials',
+    'tools-reviews',
+    'data-breaches',
+  ];
+  return allCategories.map(cat => ({
     params: { slug: cat },
     props: {
       posts: allPosts

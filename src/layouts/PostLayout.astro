@@ -27,7 +27,15 @@ const related = (await getCollection('posts', p =>
 )).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 3);
 ---
 
-<BaseLayout title={title} description={excerpt} image={image} type="article">
+<BaseLayout
+  title={title}
+  description={excerpt}
+  image={image}
+  type="article"
+  publishedTime={date.toISOString()}
+  articleAuthor={author}
+  articleSection={category}
+>
   <div class="post-page">
     <div class="container">
 
